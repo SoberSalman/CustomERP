@@ -6,10 +6,7 @@ from django.db.models import Q, Sum, Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 import django_filters
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from weasyprint import HTML
-import io
+from django.http import HttpResponse, JsonResponse
 
 from .models import SalesOrder, Invoice, Payment
 from .serializers import (
@@ -200,27 +197,11 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def download_pdf(self, request, pk=None):
-        """Download invoice as PDF"""
-        invoice = self.get_object()
-        tenant = request.user.tenant_membership.tenant
-        
-        # Render the HTML template
-        html_content = render_to_string('invoice_template.html', {
-            'invoice': invoice,
-            'tenant': tenant,
-        })
-        
-        # Create PDF from HTML
-        html = HTML(string=html_content)
-        pdf_file = io.BytesIO()
-        html.write_pdf(target=pdf_file)
-        pdf_file.seek(0)
-        
-        # Prepare response
-        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="Invoice-{invoice.invoice_number}.pdf"'
-        
-        return response
+        """Download invoice as PDF - Temporarily disabled for Vercel deployment"""
+        return JsonResponse({
+            'error': 'PDF generation temporarily disabled for serverless deployment',
+            'message': 'This feature will be re-enabled after deployment optimization'
+        }, status=501)
 
 
 class PaymentViewSet(viewsets.ModelViewSet):

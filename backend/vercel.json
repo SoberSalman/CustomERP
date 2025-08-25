@@ -2,38 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "custom_erp/wsgi.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
-      }
-    },
-    {
-      "src": "manage.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
-      }
+      "src": "vercel_app.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "custom_erp/wsgi.py"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "custom_erp/wsgi.py"
-    },
-    {
       "src": "/(.*)",
-      "dest": "custom_erp/wsgi.py"
+      "dest": "vercel_app.py"
     }
-  ],
-  "env": {
-    "DJANGO_SETTINGS_MODULE": "custom_erp.settings_production",
-    "PYTHONPATH": "."
-  }
+  ]
 }
